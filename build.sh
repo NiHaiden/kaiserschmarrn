@@ -38,7 +38,7 @@ systemctl enable firewalld
 
 
 
-dnf5 install 'dnf5-command(config-manager)'
+dnf5 install -y 'dnf5-command(config-manager)'
 
 dnf config-manager --add-repo "https://pkgs.tailscale.com/stable/fedora/$(rpm -E %centos)/tailscale.repo"
 dnf config-manager --set-disabled tailscale-stable
