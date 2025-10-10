@@ -7,11 +7,6 @@ systemctl enable podman-auto-update.timer
 systemctl enable --global podman-auto-update.timer
 
 dnf -y remove \
-  adcli \
-  libdnf-plugin-subscription-manager \
-  python3-subscription-manager-rhsm \
-  subscription-manager \
-  subscription-manager-rhsm-certificates \
   toolbox \
   yggdrasil
 
@@ -39,7 +34,7 @@ dnf -y install --setopt=install_weak_deps=False \
 
 systemctl enable firewalld
 
-dnf config-manager --add-repo "https://pkgs.tailscale.com/stable/centos/$(rpm -E %centos)/tailscale.repo"
+dnf config-manager --add-repo "https://pkgs.tailscale.com/stable/fedora/$(rpm -E %centos)/tailscale.repo"
 dnf config-manager --set-disabled tailscale-stable
 dnf -y install --enablerepo='tailscale-stable' tailscale
 systemctl enable tailscaled
@@ -62,9 +57,7 @@ dnf -y install NetworkManager-wifi \
     realtek-firmware \
     tiwilink-firmware
 
-dnf -y install epel-release
-dnf config-manager --set-disabled epel
-dnf -y install --enablerepo="epel" just btop htop
+dnf -y install just btop htop
 
 # Apply IP Forwarding before installing Docker to prevent messing with LXC networking
 sysctl -p
