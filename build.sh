@@ -92,6 +92,16 @@ fi
 # 6. Disable Docker repository to prevent runtime updates    
 echo "Docker CE installation complete!"
 
+# Create sysusers.d entries for groups without systemd configuration
+mkdir -p /usr/lib/sysusers.d
+cat >/usr/lib/sysusers.d/jackuser.conf <<EOF
+g jackuser - -
+EOF
+
+cat >/usr/lib/sysusers.d/qat.conf <<EOF
+g qat - -
+EOF
+
 echo "Installing cloud init" 
 
 dnf5 install -y cloud-init
