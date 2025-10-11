@@ -76,11 +76,10 @@ iptable_nat
 EOF
   
 echo "Installing Docker CE..."  
-
-dnf config-manager --set-disabled docker-ce-stable
-
 # 4. Install Docker packages  
-dnf -y install --enablerepo="docker-ce-stable" containerd.io docker-buildx-plugin docker-ce docker-ce-cli docker-compose-plugin  
+dnf5 -y install containerd.io docker-buildx-plugin docker-ce docker-ce-cli docker-compose-plugin
+sed -i 's@enabled=1@enabled=0@g' /etc/yum.repos.d/docker-ce.repo
+
   
 if rpm -q docker-ce >/dev/null; then
     systemctl enable docker.socket
@@ -95,7 +94,7 @@ echo "Docker CE installation complete!"
 
 echo "Installing cloud init" 
 
-dnf install -y cloud-init
+dnf5 install -y cloud-init
 
 
 tee /usr/lib/systemd/zram-generator.conf <<EOF
