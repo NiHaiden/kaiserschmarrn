@@ -39,10 +39,9 @@ systemctl enable firewalld
 
 dnf5 install -y 'dnf5-command(config-manager)'
 
-dnf5 config-manager addrepo --from-repofile="https://pkgs.tailscale.com/stable/fedora/\$(rpm -E %fedora)/tailscale.repo"
-dnf5 config-manager setopt tailscale-stable.enabled=0
-
-dnf5 -y install --enablerepo='tailscale-stable' tailscale
+dnf5 config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
+dnf5 -y install tailscale
+sed -i 's@enabled=1@enabled=0@g' /etc/yum.repos.d/tailscale.repo
 systemctl enable tailscaled
 
 dnf -y copr enable ublue-os/packages
