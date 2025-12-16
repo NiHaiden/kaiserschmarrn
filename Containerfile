@@ -2,7 +2,7 @@ FROM scratch AS ctx
 
 COPY build.sh /build.sh
 
-FROM quay.io/fedora/fedora-bootc:42
+FROM quay.io/fedora/fedora-bootc:43
 
 COPY repos/docker-ce.repo /etc/yum.repos.d/docker-ce.repo
 COPY build_files/docker.conf /usr/lib/sysusers.d/docker.conf
