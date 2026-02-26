@@ -11,6 +11,8 @@ dnf -y remove \
   yggdrasil
 
 
+dnf5 install -y vulkan-tools mesa-vulkan-drivers
+
 
 dnf -y install --setopt=install_weak_deps=False \
   cockpit-machines \
