@@ -1,0 +1,83 @@
+---
+name: Build ISO
+
+on:
+  workflow_run:
+    workflows: ["Build container image"]
+    types:
+      - completed
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      image:
+        description: "Container image to build ISO from"
+        required: false
+        default: ""
+
+env:
+  IMAGE_NAME: "${{ github.event.repository.name }}"
+  IMAGE_REGISTRY: "ghcr.io/${{ github.repository_owner }}"
+
+jobs:
+  build_iso:
+    name: Build ISO
+    runs-on: ubuntu-24.04
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+
+      - name: Lowercase registry names
+        id: registry
+        run: |
+          echo "image_registry=ghcr.io/${OWNER,,}" >> $GITHUB_OUTPUT
+        env:
+          OWNER: ${{ github.repository_owner }}
+
+      - name: Set image name
+        id: image
+        run: |
+          if [ -n "${{ github.event.inputs.image }}" ]; then
+            echo "image_full=${{ github.event.inputs.image }}" >> $GITHUB_OUTPUT
+          else
+            echo "image_full=${{ steps.registry.outputs.image_registry }}/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gettext-base podman
+
+      - name: Install just
+        uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
+
+      - name: Build ISO
+        run: |
+          just iso "${{ steps.image.outputs.image_full }}"
+        env:
+          IMAGE_FULL: ${{ steps.image.outputs.image_full }}
+
+      - name: Get ISO filename
+        id: iso
+        run: |
+          ISO_FILE=$(ls output/bootiso/*.iso 2>/dev/null | head -n1)
+          if [ -z "$ISO_FILE" ]; then
+            echo "No ISO file found in output/bootiso directory"
+            exit 1
+          fi
+          echo "iso_path=$ISO_FILE" >> $GITHUB_OUTPUT
+          echo "iso_name=$(basename $ISO_FILE)" >> $GITHUB_OUTPUT
+
+      - name: Upload ISO artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ${{ env.IMAGE_NAME }}-iso
+          path: output/bootiso/*.iso
+          retention-days: 7
+          compression-level: 0
