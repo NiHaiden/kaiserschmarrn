@@ -19,4 +19,5 @@ iso $image=image:
         quay.io/centos-bootc/bootc-image-builder:latest \
         --type iso \
         --use-librepo=True \
+        --rootfs=btrfs
         "${image}"
