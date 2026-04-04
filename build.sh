@@ -23,6 +23,7 @@ dnf -y install --setopt=install_weak_deps=False \
   cockpit-system \
   firewalld \
   git-core \
+  libatomic \
   libvirt-client \
   libvirt-daemon \
   libvirt-daemon-kvm \
