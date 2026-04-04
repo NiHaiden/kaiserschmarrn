@@ -53,6 +53,10 @@ dnf -y install --enablerepo="copr:copr.fedorainfracloud.org:ublue-os:packages" -
     ublue-os-libvirt-workarounds
 
 dnf -y install https://github.com/fastfetch-cli/fastfetch/releases/download/2.50.2/fastfetch-linux-amd64.rpm
+install -d /usr/share/fastfetch /etc/skel/.config/fastfetch /root/.config/fastfetch
+install -m 0644 /usr/share/kaiserschmarrn/fastfetch/logo.txt /usr/share/fastfetch/kaiserschmarrn-logo.txt
+install -m 0644 /usr/share/kaiserschmarrn/fastfetch/config.jsonc /etc/skel/.config/fastfetch/config.jsonc
+install -m 0644 /usr/share/kaiserschmarrn/fastfetch/config.jsonc /root/.config/fastfetch/config.jsonc
 
 dnf -y install NetworkManager-wifi \
     atheros-firmware \

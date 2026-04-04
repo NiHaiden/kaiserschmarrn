@@ -1,0 +1,95 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "file",
+    "source": "/usr/share/fastfetch/kaiserschmarrn-logo.txt",
+    "padding": {
+      "top": 1,
+      "right": 3
+    },
+    "color": {
+      "1": "yellow",
+      "2": "light_yellow",
+      "3": "white",
+      "4": "bright_black",
+      "5": "bright_yellow"
+    }
+  },
+  "display": {
+    "separator": "  ",
+    "key": {
+      "width": 12
+    },
+    "color": {
+      "keys": "yellow",
+      "title": "yellow",
+      "separator": "white",
+      "output": "default"
+    }
+  },
+  "modules": [
+    "title",
+    {
+      "type": "custom",
+      "key": "Flavor",
+      "format": "Bootc server image for containers, VMs, and remote access",
+      "outputColor": "white"
+    },
+    {
+      "type": "custom",
+      "key": "Image",
+      "format": "ghcr.io/nihaiden/kaiserschmarrn:latest",
+      "outputColor": "bright_yellow"
+    },
+    "break",
+    {
+      "type": "os",
+      "key": "OS"
+    },
+    {
+      "type": "host",
+      "key": "Host"
+    },
+    {
+      "type": "kernel",
+      "key": "Kernel"
+    },
+    {
+      "type": "packages",
+      "key": "Packages"
+    },
+    {
+      "type": "uptime",
+      "key": "Uptime"
+    },
+    {
+      "type": "shell",
+      "key": "Shell"
+    },
+    {
+      "type": "cpu",
+      "key": "CPU"
+    },
+    {
+      "type": "gpu",
+      "key": "GPU"
+    },
+    {
+      "type": "memory",
+      "key": "Memory"
+    },
+    {
+      "type": "swap",
+      "key": "Swap"
+    },
+    {
+      "type": "localip",
+      "key": "IP"
+    },
+    "break",
+    {
+      "type": "colors",
+      "symbol": "circle"
+    }
+  ]
+}

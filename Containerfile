@@ -7,6 +7,7 @@ FROM quay.io/fedora/fedora-bootc:43
 COPY repos/docker-ce.repo /etc/yum.repos.d/docker-ce.repo
 COPY build_files/docker.conf /usr/lib/sysusers.d/docker.conf
 COPY build_files/dhcpd.conf /usr/lib/sysusers.d/dhcpd.conf
+COPY build_files/fastfetch /usr/share/kaiserschmarrn/fastfetch
 COPY --from=ghcr.io/ublue-os/brew:latest /system_files /
 RUN --mount=type=cache,dst=/var/cache \
     --mount=type=cache,dst=/var/log \
