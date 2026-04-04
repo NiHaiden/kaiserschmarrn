@@ -134,5 +134,5 @@ KERNEL_VERSION="$(find "/usr/lib/modules" -maxdepth 1 -type d ! -path "/usr/lib/
 export DRACUT_NO_XATTR=1
 dracut --no-hostonly --kver "$KERNEL_VERSION" --reproducible --zstd -v --add ostree -f "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"
 chmod 0600 "/usr/lib/modules/${KERNEL_VERSION}/initramfs.img"
-
-rm -rf /run/systemd /run/systemd/resolve
+# /run is a tmpfs mount during the build step, so runtime state is not persisted.
+# Deleting systemd-resolved's live stub here is unnecessary and fails on GitHub Actions.
