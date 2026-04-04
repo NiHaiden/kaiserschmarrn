@@ -45,7 +45,7 @@ After boot, Cockpit is available at `https://<host>:9090`.
 - Bootc updates are staged weekly
 - RPM-OSTree layering is locked
 - zRAM is set to `min(ram, 8192)`
-- Root and newly created users get a custom Fastfetch config and logo
+- `fastfetch` uses a custom Kaiserschmarrn wrapper, config, and logo by default
 
 ## Useful Commands
 

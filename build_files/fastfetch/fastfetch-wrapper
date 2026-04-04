@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+CONFIG="/usr/share/kaiserschmarrn/fastfetch/config.jsonc"
+
+for arg in "$@"; do
+  if [[ "$arg" == "--config" || "$arg" == "-c" ]]; then
+    exec /usr/bin/fastfetch "$@"
+  fi
+done
+
+exec /usr/bin/fastfetch --config "$CONFIG" "$@"
