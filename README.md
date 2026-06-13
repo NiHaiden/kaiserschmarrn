@@ -11,7 +11,8 @@ Kaiserschmarrn is a Fedora Bootc 44 server image with cloud-init, Cockpit, Docke
 - Podman with auto-update timer enabled
 - libvirt/KVM, `virt-install`, and `qemu-guest-agent`
 - Tailscale, firewalld, NetworkManager, and Wi-Fi firmware
-- AMD ROCm from AMD's EL10 `repo.radeon.com` packages (`ROCM_VERSION=latest`; runtime packages by default)
+- AMD ROCm from AMD's EL10 `repo.radeon.com` packages (`ROCM_VERSION=latest`; runtime packages plus `hipcc` by default)
+- Fedora `@development-tools`
 - `fastfetch`, `just`, `fish`, `btop`, and `htop`
 
 ## Build
@@ -28,11 +29,11 @@ ROCm build args:
 podman build \
   --build-arg ROCM_VERSION=latest \
   --build-arg ROCM_EL_MAJOR=10 \
-  --build-arg ROCM_PACKAGES="rocm-hip-runtime rocm-opencl-runtime rocminfo amd-smi-lib rocm-smi-lib" \
+  --build-arg ROCM_PACKAGES="rocm-hip-runtime rocm-opencl-runtime hipcc rocminfo amd-smi-lib rocm-smi-lib" \
   -t kaiserschmarrn .
 ```
 
-`ROCM_PACKAGES` defaults to the runtime/diagnostic set above. Use `ROCM_PACKAGES="rocm"` for AMD's full ROCm meta-package, but note that it is much larger.
+`ROCM_PACKAGES` defaults to the runtime/diagnostic set above plus `hipcc`. Use `ROCM_PACKAGES="rocm"` for AMD's full ROCm meta-package, but note that it is much larger.
 
 To build an ISO locally:
 
