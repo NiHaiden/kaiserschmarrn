@@ -17,7 +17,7 @@ install_amd_rocm() {
   local rocm_el_major="${ROCM_EL_MAJOR:-10}"
   local rocm_version="${ROCM_VERSION:-latest}"
   local rocm_repo_baseurl="${ROCM_REPO_BASEURL:-https://repo.radeon.com/rocm/el${rocm_el_major}/${rocm_version}/main}"
-  local rocm_packages_string="${ROCM_PACKAGES:-rocm-hip-runtime rocm-opencl-runtime hipcc rocminfo amd-smi-lib rocm-smi-lib}"
+  local rocm_packages_string="${ROCM_PACKAGES:-rocm-hip-runtime rocm-hip-runtime-devel rocm-opencl-runtime hipcc hipblas-devel hipblaslt-devel rocminfo amd-smi-lib rocm-smi-lib}"
   local rocm_packages
 
   if [[ "$(uname -m)" != "x86_64" ]]; then
