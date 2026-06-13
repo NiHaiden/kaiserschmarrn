@@ -13,6 +13,65 @@ dnf -y remove \
 
 dnf5 install -y vulkan-tools mesa-vulkan-drivers
 
+install_amd_rocm() {
+  local rocm_el_major="${ROCM_EL_MAJOR:-10}"
+  local rocm_version="${ROCM_VERSION:-latest}"
+  local rocm_repo_baseurl="${ROCM_REPO_BASEURL:-https://repo.radeon.com/rocm/el${rocm_el_major}/${rocm_version}/main}"
+  local rocm_packages_string="${ROCM_PACKAGES:-rocm-hip-runtime rocm-opencl-runtime rocminfo amd-smi-lib rocm-smi-lib}"
+  local rocm_packages
+
+  if [[ "$(uname -m)" != "x86_64" ]]; then
+    echo "Skipping AMD ROCm install: repo.radeon.com ROCm RPMs for EL are x86_64-only."
+    return 0
+  fi
+
+  read -r -a rocm_packages <<<"${rocm_packages_string}"
+
+  cat >/etc/yum.repos.d/amd-rocm.repo <<EOF
+[amd-rocm]
+name=AMD ROCm ${rocm_version} for EL${rocm_el_major}
+baseurl=${rocm_repo_baseurl}
+enabled=1
+priority=50
+gpgcheck=1
+gpgkey=https://repo.radeon.com/rocm/rocm.gpg.key
+EOF
+
+  dnf5 -y install --setopt=install_weak_deps=False \
+    python3-setuptools \
+    python3-wheel \
+    environment-modules
+
+  dnf5 -y install --setopt=install_weak_deps=False "${rocm_packages[@]}"
+
+  cat >/etc/ld.so.conf.d/rocm.conf <<'EOF'
+/opt/rocm/lib
+/opt/rocm/lib64
+EOF
+  ldconfig
+
+  cat >/etc/profile.d/rocm.sh <<'EOF'
+# AMD ROCm user-space tools from repo.radeon.com.
+if [ -d /opt/rocm/bin ]; then
+    case ":${PATH}:" in
+        *:/opt/rocm/bin:*) ;;
+        *) export PATH="${PATH:+${PATH}:}/opt/rocm/bin" ;;
+    esac
+fi
+EOF
+
+  cat >/usr/lib/udev/rules.d/70-amdgpu-rocm.rules <<'EOF'
+KERNEL=="kfd", GROUP="render", MODE="0660"
+SUBSYSTEM=="drm", KERNEL=="renderD*", GROUP="render", MODE="0660"
+EOF
+
+  # Keep the image as the update source; do not let rpm-ostree/layering pull
+  # ROCm updates independently from the bootc image build.
+  sed -i 's@enabled=1@enabled=0@g' /etc/yum.repos.d/amd-rocm.repo
+}
+
+install_amd_rocm
+
 
 dnf -y install --setopt=install_weak_deps=False \
   cockpit-machines \
