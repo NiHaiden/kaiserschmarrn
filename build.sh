@@ -95,7 +95,8 @@ dnf -y install --setopt=install_weak_deps=False \
   udisks2-lvm2 \
   virt-install \
   xdg-user-dirs \
-  fish
+  fish \
+  distrobox
 
 systemctl enable firewalld
 
