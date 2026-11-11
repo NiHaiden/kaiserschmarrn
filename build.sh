@@ -122,6 +122,10 @@ chmod 0644 /etc/yum.repos.d/rex.repo
 
 dnf5 -y install rex
 sed -i 's@enabled=1@enabled=0@g' /etc/yum.repos.d/rex.repo
+# rex's %post creates the user via useradd; bootc lint requires a sysusers.d entry for it.
+IFS=: read -r _ _ rex_uid rex_gid rex_gecos rex_home rex_shell < <(getent passwd rex)
+printf 'g rex %s\nu rex %s:%s "%s" %s %s\n' "$rex_gid" "$rex_uid" "$rex_gid" "${rex_gecos:-rex}" "${rex_home:--}" "${rex_shell:--}" >/usr/lib/sysusers.d/rex.conf
+cat /usr/lib/sysusers.d/rex.conf
 
 dnf -y copr enable ublue-os/packages
 dnf -y copr disable ublue-os/packages
