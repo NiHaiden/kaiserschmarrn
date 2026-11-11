@@ -108,6 +108,21 @@ dnf5 -y install tailscale
 sed -i 's@enabled=1@enabled=0@g' /etc/yum.repos.d/tailscale.repo
 systemctl enable tailscaled
 
+
+cat >/etc/yum.repos.d/rex.repo <<'EOF'
+[rex]
+name=Rex (snapshot)
+baseurl=https://pkgs.superlogical.com/rex/rpm/snapshot/$basearch
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://pkgs.superlogical.com/rex/keys/rex.asc
+EOF
+chmod 0644 /etc/yum.repos.d/rex.repo
+
+dnf5 -y install rex
+sed -i 's@enabled=1@enabled=0@g' /etc/yum.repos.d/rex.repo
+
 dnf -y copr enable ublue-os/packages
 dnf -y copr disable ublue-os/packages
 dnf -y install --enablerepo="copr:copr.fedorainfracloud.org:ublue-os:packages" --setopt=install_weak_deps=False \
@@ -194,6 +209,8 @@ cat >/usr/lib/tmpfiles.d/resolved-default.conf <<'EOF'
 L /etc/resolv.conf - - - - ../run/systemd/resolve/stub-resolv.conf
 EOF
 systemctl preset systemd-resolved.service
+
+
 
 KERNEL_VERSION="$(find "/usr/lib/modules" -maxdepth 1 -type d ! -path "/usr/lib/modules" -exec basename '{}' ';' | sort | tail -n 1)"
 export DRACUT_NO_XATTR=1
